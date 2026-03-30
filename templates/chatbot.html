@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>GhostKey Security Assistant</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+body{
+font-family: Arial, sans-serif;
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background: linear-gradient(135deg,#020024,#090979,#00d4ff);
+background-size:400% 400%;
+animation:bg 10s infinite alternate;
+}
+
+@keyframes bg{
+0%{background-position:left}
+100%{background-position:right}
+}
+
+.chat-container{
+width:420px;
+height:600px;
+background: rgba(255,255,255,0.08);
+backdrop-filter: blur(15px);
+border-radius:20px;
+box-shadow:0 0 25px rgba(0,255,255,0.4);
+display:flex;
+flex-direction:column;
+overflow:hidden;
+}
+
+.chat-header{
+background:rgba(0,0,0,0.5);
+color:white;
+padding:15px;
+font-size:18px;
+text-align:center;
+letter-spacing:1px;
+}
+
+.chat-box{
+flex:1;
+padding:15px;
+overflow-y:auto;
+color:white;
+}
+
+.chat-box p{
+margin:10px 0;
+padding:10px;
+border-radius:10px;
+max-width:80%;
+}
+
+.user{
+background:#0066ff;
+align-self:flex-end;
+}
+
+.bot{
+background:#333;
+}
+
+.input-area{
+display:flex;
+padding:10px;
+background:rgba(0,0,0,0.4);
+}
+
+input{
+flex:1;
+padding:10px;
+border:none;
+border-radius:10px;
+outline:none;
+}
+
+button{
+margin-left:10px;
+padding:10px 15px;
+border:none;
+border-radius:10px;
+background:#00eaff;
+color:black;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#00ff9d;
+transform:scale(1.05);
+}
+
+.back{
+text-align:center;
+padding:10px;
+background:#000;
+}
+
+.back a{
+color:#00eaff;
+text-decoration:none;
+}
+
+</style>
+
+<script>
+
+async function sendMessage(){
+
+let msg=document.getElementById("msg").value
+
+if(msg.trim()=="") return
+
+let chat=document.getElementById("chat")
+
+chat.innerHTML+=`<p class="user"><b>You:</b> ${msg}</p>`
+
+document.getElementById("msg").value=""
+
+let response=await fetch("/ask",{
+method:"POST",
+headers:{
+"Content-Type":"application/x-www-form-urlencoded"
+},
+body:"message="+msg
+})
+
+let data=await response.json()
+
+chat.innerHTML+=`<p class="bot"><b>GhostKey AI:</b> ${data.response}</p>`
+
+chat.scrollTop=chat.scrollHeight
+}
+
+</script>
+
+</head>
+
+<body>
+
+<div class="chat-container">
+
+<div class="chat-header">
+<i class="fa-solid fa-shield-halved"></i> GhostKey Security Assistant
+</div>
+
+<div id="chat" class="chat-box"></div>
+
+<div class="input-area">
+<input id="msg" placeholder="Ask about security...">
+<button onclick="sendMessage()">
+<i class="fa-solid fa-paper-plane"></i>
+</button>
+</div>
+
+<div class="back">
+<a href="/dashboard">⬅ Back to Dashboard</a>
+</div>
+
+</div>
+
+</body>
+</html>

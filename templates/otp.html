@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GhostKey Secure Login OTP</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Particles -->
+<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+
+<style>
+
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:Arial;
+color:white;
+background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+overflow:hidden;
+}
+
+/* particles background */
+#particles-js{
+position:absolute;
+width:100%;
+height:100%;
+z-index:-1;
+}
+
+/* OTP card */
+.otp-card{
+background:rgba(255,255,255,0.08);
+border-radius:18px;
+padding:40px;
+width:380px;
+text-align:center;
+backdrop-filter:blur(15px);
+box-shadow:0 0 25px rgba(0,255,255,0.3);
+animation:fadeIn 1s;
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(30px);}
+to{opacity:1;}
+}
+
+/* input */
+.form-control{
+background:rgba(255,255,255,0.1);
+border:none;
+color:white;
+}
+
+.form-control::placeholder{
+color:#ddd;
+}
+
+.input-group-text{
+background:#00eaff;
+border:none;
+color:black;
+}
+
+/* button */
+.btn-verify{
+background:#00eaff;
+border:none;
+color:black;
+font-weight:bold;
+transition:0.3s;
+}
+
+.btn-verify:hover{
+background:#00ffa6;
+transform:scale(1.05);
+}
+
+/* resend button */
+.btn-resend{
+background:transparent;
+border:1px solid #00eaff;
+color:#00eaff;
+margin-top:10px;
+transition:0.3s;
+}
+
+.btn-resend:hover{
+background:#00eaff;
+color:black;
+}
+
+/* timer */
+.timer{
+font-size:14px;
+margin-top:10px;
+color:#00ffa6;
+}
+
+/* security */
+.security{
+margin-top:15px;
+font-size:13px;
+color:#00eaff;
+}
+
+.spinner{
+display:none;
+}
+
+.note{
+font-size:14px;
+color:#d1d5db;
+margin-bottom:15px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="particles-js"></div>
+
+<div class="otp-card">
+
+<h3>
+<i class="fa-solid fa-shield-halved"></i>
+GhostKey Secure Login
+</h3>
+
+<p class="note">
+Enter the OTP sent to your system
+</p>
+
+<form action="/verify" method="POST" id="otpForm">
+
+<div class="mb-3">
+
+<div class="input-group">
+
+<span class="input-group-text">
+<i class="fa-solid fa-key"></i>
+</span>
+
+<input
+type="text"
+name="otp"
+class="form-control"
+placeholder="Enter OTP"
+required>
+
+</div>
+
+</div>
+
+<button class="btn btn-verify w-100">
+
+<i class="fa-solid fa-check"></i>
+Verify OTP
+
+<span class="spinner spinner-border spinner-border-sm"></span>
+
+</button>
+
+</form>
+
+<!-- TIMER -->
+<div class="timer">
+OTP expires in <span id="countdown">30</span> seconds
+</div>
+
+<!-- RESEND BUTTON -->
+<button id="resendBtn" class="btn btn-resend w-100" disabled>
+<i class="fa-solid fa-rotate"></i> Resend OTP
+</button>
+
+<div class="security">
+<i class="fa-solid fa-lock"></i>
+Protected with Secure Authentication
+</div>
+
+<br>
+
+<a href="/login" class="text-info">
+<i class="fa-solid fa-arrow-left"></i>
+Back to Login
+</a>
+
+</div>
+
+<script>
+
+/* loading spinner */
+const form=document.getElementById("otpForm");
+const spinner=document.querySelector(".spinner");
+
+form.addEventListener("submit",()=>{
+spinner.style.display="inline-block";
+});
+
+/* OTP countdown + resend logic */
+
+let time=30;
+let countdown=document.getElementById("countdown");
+let resendBtn=document.getElementById("resendBtn");
+
+let interval=setInterval(()=>{
+if(time>0){
+time--;
+countdown.innerText=time;
+}else{
+resendBtn.disabled=false;
+}
+},1000);
+
+/* RESEND FUNCTION */
+
+resendBtn.addEventListener("click",()=>{
+
+fetch('/resend-otp',{
+method:'POST'
+})
+.then(res=>res.json())
+.then(data=>{
+
+alert(data.message);
+
+/* reset timer */
+time=30;
+countdown.innerText=time;
+resendBtn.disabled=true;
+
+clearInterval(interval);
+
+interval=setInterval(()=>{
+if(time>0){
+time--;
+countdown.innerText=time;
+}else{
+resendBtn.disabled=false;
+}
+},1000);
+
+})
+.catch(()=>{
+alert("Error resending OTP");
+});
+
+});
+
+/* particle background */
+
+particlesJS("particles-js",{
+particles:{
+number:{value:70},
+size:{value:3},
+move:{speed:1},
+line_linked:{enable:true}
+}
+});
+
+</script>
+
+</body>
+</html>

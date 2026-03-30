@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<title>GhostKey Dashboard</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+color:white;
+display:flex;
+height:100vh;
+overflow:hidden;
+}
+
+/* Sidebar */
+.sidebar{
+width:220px;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(12px);
+padding:25px;
+}
+
+.sidebar h2{
+margin-bottom:30px;
+text-align:center;
+}
+
+.sidebar a{
+display:block;
+color:white;
+text-decoration:none;
+margin:15px 0;
+padding:10px;
+border-radius:8px;
+transition:0.3s;
+}
+
+.sidebar a:hover{
+background:#5a54f9;
+transform:translateX(5px);
+}
+
+/* Main */
+.main{
+flex:1;
+padding:30px;
+overflow-y:auto;
+}
+
+/* Cards */
+.cards{
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+margin-bottom:30px;
+}
+
+.card{
+flex:1;
+min-width:220px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(10px);
+padding:25px;
+border-radius:15px;
+box-shadow:0 0 20px rgba(0,255,255,0.2);
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+box-shadow:0 0 30px rgba(0,255,255,0.5);
+}
+
+/* FILTER BAR */
+.filter-bar{
+display:flex;
+gap:10px;
+margin-bottom:15px;
+flex-wrap:wrap;
+}
+
+.filter-bar input,
+.filter-bar select{
+padding:10px;
+border-radius:8px;
+border:none;
+outline:none;
+font-size:14px;
+}
+
+/* dropdown fix */
+.filter-bar select{
+background:#ffffff;
+color:black;
+border:1px solid #00eaff;
+}
+
+.filter-bar select option{
+background:#ffffff;
+color:black;
+}
+
+/* search input */
+.filter-bar input{
+background:rgba(255,255,255,0.1);
+color:white;
+}
+
+.filter-bar input::placeholder{
+color:#ccc;
+}
+
+.filter-bar input:focus{
+box-shadow:0 0 10px #00eaff;
+}
+
+/* Files */
+.file-box{
+background:rgba(255,255,255,0.08);
+padding:15px;
+margin:10px 0;
+border-radius:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.file-name{
+display:flex;
+align-items:center;
+gap:10px;
+font-weight:bold;
+}
+
+/* highlight */
+.highlight{
+background:#00eaff;
+color:black;
+padding:2px 4px;
+border-radius:4px;
+}
+
+/* Buttons */
+.btn{
+background:#5a54f9;
+padding:8px 14px;
+border-radius:6px;
+text-decoration:none;
+color:white;
+margin-left:8px;
+}
+
+.btn:hover{
+background:#00eaff;
+color:black;
+}
+
+/* Chart */
+.chart-container{
+width:400px;
+margin-top:30px;
+background:rgba(255,255,255,0.08);
+padding:20px;
+border-radius:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+<h2><i class="fa fa-shield-halved"></i> GhostKey</h2>
+
+<a href="/encrypt"><i class="fa fa-lock"></i> Encrypt File</a>
+<a href="/decrypt"><i class="fa fa-unlock"></i> Decrypt File</a>
+<a href="/share"><i class="fa fa-share"></i> Share File</a>
+<a href="/chatbot"><i class="fa fa-robot"></i> AI Assistant</a>
+<a href="/security_dashboard"><i class="fa fa-shield"></i> Security Logs</a>
+<a href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a>
+</div>
+
+<div class="main">
+
+<h1>Secure File Management Dashboard</h1>
+
+<br>
+
+<div class="cards">
+   
+<div class="card">
+<i class="fa fa-lock"></i>
+<h3>AES Encryption</h3>
+<p>Secure file encryption enabled</p>
+</div>
+
+<div class="card">
+<i class="fa fa-cloud-upload-alt"></i>
+<h3>Uploads</h3>
+<p>{{files|length}} Files Stored</p>
+</div>
+
+<div class="card">
+<i class="fa fa-shield-halved"></i>
+<h3>Security</h3>
+<p>AI Monitoring Active</p>
+</div>
+</div>
+
+<h2>Uploaded Files</h2>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+<input type="text" id="searchInput" placeholder="🔍 Search files...">
+<input type="date" id="dateFilter">
+
+<select id="typeFilter">
+<option value="all">All Types</option>
+<option value="jpg">JPG</option>
+<option value="png">PNG</option>
+<option value="mp4">MP4</option>
+<option value="txt">TXT</option>
+<option value="enc">ENC</option>
+</select>
+</div>
+
+{% if files %}
+{% for file in files %}
+
+<div class="file-box file-item" data-date="{{file}}">
+
+<div class="file-name">
+<i class="fa-solid fa-file" id="icon"></i>
+<span class="file-text">{{file}}</span>
+</div>
+
+<div>
+<a class="btn" href="/generate_link/{{file}}">
+<i class="fa fa-link"></i> Share
+</a>
+
+<a href="/delete_file/{{ file }}" class="btn">
+<i class="fa fa-trash"></i> Delete
+</a>
+</div>
+
+</div>
+
+{% endfor %}
+{% else %}
+<p>No encrypted files available.</p>
+{% endif %}
+
+<div class="chart-container">
+<canvas id="activityChart"></canvas>
+</div>
+
+</div>
+
+<script>
+
+// chart
+const ctx=document.getElementById('activityChart');
+
+new Chart(ctx,{
+type:'bar',
+data:{
+labels:['Uploads','Downloads','Shares','Security Alerts'],
+datasets:[{
+label:'System Activity',
+data:[12,8,5,2],
+backgroundColor:['#5a54f9','#00eaff','#ffcc00','#ff4c4c']
+}]
+}
+});
+
+// 🔥 ICON + FILTER LOGIC
+
+function filterFiles(){
+
+let search = document.getElementById("searchInput").value.toLowerCase();
+let type = document.getElementById("typeFilter").value;
+let date = document.getElementById("dateFilter").value;
+
+document.querySelectorAll(".file-item").forEach(item=>{
+
+let textEl = item.querySelector(".file-text");
+let fileName = textEl.innerText.toLowerCase();
+
+let parts = fileName.split('.');
+let fileExt = parts[parts.length - 1];
+let originalExt = parts.length > 1 ? parts[parts.length - 2] : "";
+
+// ICON SET
+let icon = item.querySelector("#icon");
+
+if(originalExt === "jpg" || fileExt === "jpg") icon.className="fa-solid fa-image";
+else if(originalExt === "png" || fileExt === "png") icon.className="fa-solid fa-image";
+else if(originalExt === "mp4" || fileExt === "mp4") icon.className="fa-solid fa-video";
+else if(originalExt === "txt") icon.className="fa-solid fa-file-lines";
+else if(fileExt === "enc") icon.className="fa-solid fa-lock";
+else icon.className="fa-solid fa-file";
+
+// SEARCH MATCH
+let matchSearch =
+fileName.includes(search) ||
+fileExt.includes(search) ||
+originalExt.includes(search);
+
+// TYPE MATCH
+let matchType = (type==="all" || fileExt===type || originalExt===type);
+
+// DATE MATCH (TEMP: filename-based)
+let matchDate = true;
+if(date){
+matchDate = fileName.includes(date);
+}
+
+if(matchSearch && matchType && matchDate){
+
+item.style.display="flex";
+
+// highlight
+let originalText = textEl.innerText;
+let regex = new RegExp(search, "gi");
+
+if(search !== ""){
+textEl.innerHTML = originalText.replace(regex, m =>
+`<span class="highlight">${m}</span>`);
+}
+
+}else{
+item.style.display="none";
+}
+
+});
+
+// reset highlight
+if(search === ""){
+document.querySelectorAll(".file-text").forEach(el=>{
+el.innerHTML = el.innerText;
+});
+}
+
+}
+
+// EVENTS
+document.getElementById("searchInput").addEventListener("keyup", filterFiles);
+document.getElementById("typeFilter").addEventListener("change", filterFiles);
+document.getElementById("dateFilter").addEventListener("change", filterFiles);
+
+</script>
+
+</body>
+</html>

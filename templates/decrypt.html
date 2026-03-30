@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<title>GhostKey | Decrypt File</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+body{
+font-family:Arial, sans-serif;
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+color:white;
+}
+
+/* Glass container */
+
+.container{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(15px);
+padding:40px;
+border-radius:20px;
+width:380px;
+box-shadow:0 0 25px rgba(0,255,255,0.3);
+animation:fadeIn 1s ease;
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(20px)}
+to{opacity:1}
+}
+
+h2{
+text-align:center;
+margin-bottom:25px;
+}
+
+/* Input fields */
+
+input{
+width:100%;
+padding:12px;
+margin-top:6px;
+margin-bottom:15px;
+border:none;
+border-radius:8px;
+outline:none;
+background:rgba(255,255,255,0.1);
+color:white;
+}
+
+input::file-selector-button{
+background:#5a54f9;
+border:none;
+color:white;
+padding:6px 10px;
+border-radius:5px;
+cursor:pointer;
+}
+
+/* Button */
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+background:#5a54f9;
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#00eaff;
+color:black;
+transform:scale(1.03);
+}
+
+/* Security status */
+
+.status{
+margin-top:15px;
+font-size:14px;
+text-align:center;
+color:#00ffcc;
+}
+
+/* Back link */
+
+.back{
+text-align:center;
+margin-top:15px;
+}
+
+.back a{
+color:#00eaff;
+text-decoration:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2><i class="fa fa-unlock"></i> Decrypt File</h2>
+
+<form method="POST" enctype="multipart/form-data">
+
+<label>Select Encrypted File</label>
+
+<input type="file" name="file" required>
+
+<label>Enter Password</label>
+
+<input type="password" name="password" placeholder="Enter decryption password" required>
+
+<button type="submit">
+<i class="fa fa-key"></i> Decrypt Securely
+</button>
+
+</form>
+
+<div class="status">
+<i class="fa fa-shield-halved"></i> AES Encryption Protection Enabled
+</div>
+
+<div class="back">
+<a href="/dashboard">⬅ Back to Dashboard</a>
+</div>
+
+</div>
+
+</body>
+
+</html>

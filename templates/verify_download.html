@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GhostKey Secure Download</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+
+<style>
+
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:Arial;
+color:white;
+background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+overflow:hidden;
+}
+
+/* particle background */
+
+#particles-js{
+position:absolute;
+width:100%;
+height:100%;
+z-index:-1;
+}
+
+/* OTP card */
+
+.verify-card{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(15px);
+border-radius:18px;
+padding:40px;
+width:380px;
+text-align:center;
+box-shadow:0 0 25px rgba(0,255,255,0.3);
+animation:fadeIn 1s;
+}
+
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(30px);}
+to{opacity:1;}
+}
+
+/* inputs */
+
+.form-control{
+background:rgba(255,255,255,0.1);
+border:none;
+color:white;
+}
+
+.form-control::placeholder{
+color:#ddd;
+}
+
+.input-group-text{
+background:#00eaff;
+border:none;
+color:black;
+}
+
+/* button */
+
+.btn-secure{
+background:#00eaff;
+border:none;
+color:black;
+font-weight:bold;
+transition:0.3s;
+}
+
+.btn-secure:hover{
+background:#00ffa6;
+transform:scale(1.05);
+}
+
+/* timer */
+
+.timer{
+margin-top:10px;
+font-size:14px;
+color:#00ffa6;
+}
+
+/* security */
+
+.security{
+margin-top:15px;
+font-size:13px;
+color:#00eaff;
+}
+
+.spinner{
+display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="particles-js"></div>
+
+<div class="verify-card">
+
+<h3>
+<i class="fa-solid fa-shield-halved"></i>
+GhostKey Secure Download
+</h3>
+
+<p>
+Enter the OTP to verify and download your file
+</p>
+
+<form action="/verify_download" method="POST" id="downloadForm">
+
+<div class="mb-3">
+
+<div class="input-group">
+
+<span class="input-group-text">
+<i class="fa-solid fa-key"></i>
+</span>
+
+<input
+type="text"
+name="otp"
+class="form-control"
+placeholder="Enter OTP"
+required>
+
+</div>
+
+</div>
+
+<button class="btn btn-secure w-100">
+
+<i class="fa-solid fa-download"></i>
+Verify & Download
+
+<span class="spinner spinner-border spinner-border-sm"></span>
+
+</button>
+
+</form>
+
+<div class="timer">
+OTP expires in <span id="countdown">30</span> seconds
+</div>
+
+<div class="security">
+<i class="fa-solid fa-lock"></i>
+AES-256 Encryption + AI Security Monitoring Enabled
+</div>
+
+<br>
+
+<a href="/dashboard" class="text-info">
+<i class="fa-solid fa-arrow-left"></i>
+Back to Dashboard
+</a>
+
+</div>
+
+<script>
+
+/* spinner */
+
+const form=document.getElementById("downloadForm");
+const spinner=document.querySelector(".spinner");
+
+form.addEventListener("submit",()=>{
+spinner.style.display="inline-block";
+});
+
+/* countdown */
+
+let time=30;
+const countdown=document.getElementById("countdown");
+
+setInterval(()=>{
+if(time>0){
+time--;
+countdown.innerText=time;
+}
+},1000);
+
+/* particles */
+
+particlesJS("particles-js",{
+particles:{
+number:{value:70},
+size:{value:3},
+move:{speed:1},
+line_linked:{enable:true}
+}
+});
+
+</script>
+
+</body>
+</html>
